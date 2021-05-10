@@ -7,19 +7,36 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup(TARGETS)
 
 # Manage storage compilation
+find_package(Protobuf REQUIRED)
+protobuf_generate_cpp(PROTO_SOURCES 
+                      PROTO_HEADERS 
+                      ${CMAKE_SOURCE_DIR}/storage/network/proto_models/command.proto)
+
 add_executable(storage storage/main.cpp
                        storage/network/connection.hpp
                        storage/network/connection.cpp
                        storage/network/server.hpp
                        storage/network/server.cpp
-                       storage/network/operation_type.hpp
-                       storage/utils/noncopyable.hpp)
+                       storage/network/command_facade.hpp
+                       storage/network/command_facade.cpp
+                       storage/disk/file_reader.hpp
+                       storage/disk/file_reader.cpp
+                       storage/disk/file_writer.hpp
+                       storage/disk/file_writer.cpp
+                       storage/btree/btree.hpp
+                       storage/btree/btree.cpp
+                       storage/utils/noncopyable.hpp
+                       ${PROTO_HEADERS}
+                       ${PROTO_SOURCES})
 
 target_link_libraries(storage CONAN_PKG::asio 
-                              CONAN_PKG::spdlog)
+                              CONAN_PKG::spdlog
+                              CONAN_PKG::protobuf)
 target_include_directories(storage PUBLIC ${CONAN_INCLUDE_DIRS_ASIO}
                                           ${CONAN_INCLUDE_DIRS_SPDLOG}
-                                          ${CMAKE_SOURCE_DIR})
+                                          ${CMAKE_SOURCE_DIR}
+                                          ${CMAKE_INCLUDE_DIRS_PROTOBUF}
+                                          ${CMAKE_BINARY_DIR}) # for generated .proto models
 
 set_target_properties(storage PROPERTIES CXX_STANDARD 17
                                          CXX_STANDARD_REQUIRED on

@@ -1,7 +1,5 @@
 #pragma once
-
 #include <asio.hpp>
-
 #include "connection.hpp"
 
 namespace network {
@@ -13,6 +11,7 @@ public:
         acceptor_(io_context_, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port)),
         port_(port) {}
 
+  // blocking call
   void Start();
 
 private:
