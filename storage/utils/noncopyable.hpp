@@ -9,9 +9,9 @@ protected:
 
   NonCopyable(NonCopyable&&) = default;
   NonCopyable& operator=(NonCopyable&&) = default;
-  
+
   NonCopyable() = default;
   ~NonCopyable() = default;
 };
 
-} // namespace utils
+}  // namespace utils

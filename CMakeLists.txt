@@ -10,15 +10,16 @@ conan_basic_setup(TARGETS)
 find_package(Protobuf REQUIRED)
 protobuf_generate_cpp(PROTO_SOURCES 
                       PROTO_HEADERS 
-                      ${CMAKE_SOURCE_DIR}/storage/network/proto_models/command.proto)
+                      ${CMAKE_SOURCE_DIR}/storage/network/proto_models/request.proto
+                      ${CMAKE_SOURCE_DIR}/storage/network/proto_models/response.proto)
 
 add_executable(storage storage/main.cpp
                        storage/network/connection.hpp
                        storage/network/connection.cpp
                        storage/network/server.hpp
                        storage/network/server.cpp
-                       storage/network/command_facade.hpp
-                       storage/network/command_facade.cpp
+                       storage/network/request_facade.hpp
+                       storage/network/response_facade.hpp
                        storage/disk/file_reader.hpp
                        storage/disk/file_reader.cpp
                        storage/disk/file_writer.hpp
@@ -58,7 +59,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 endif()
 
 # Manage tests compilation
-option(COMPILE_STORAGE_TESTS "Compile tests for the storage application" ON)
+option(COMPILE_STORAGE_TESTS "Compile tests for the application" ON)
 if (COMPILE_STORAGE_TESTS)
     add_subdirectory(tests)
 endif()

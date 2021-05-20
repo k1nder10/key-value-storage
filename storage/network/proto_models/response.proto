@@ -1,0 +1,11 @@
+syntax = "proto3";
+package network;
+
+message Response {
+  enum StatusCode {
+    Ok = 0;
+    Error = 1;
+  }
+
+  StatusCode code = 1;
+}
