@@ -20,6 +20,7 @@ add_executable(storage storage/main.cpp
                        storage/network/server.cpp
                        storage/network/request_facade.hpp
                        storage/network/response_facade.hpp
+                       storage/network/types.hpp
                        storage/disk/file_reader.hpp
                        storage/disk/file_reader.cpp
                        storage/disk/file_writer.hpp

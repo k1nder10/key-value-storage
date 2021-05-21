@@ -2,10 +2,11 @@
 #include <asio.hpp>
 
 #include "connection.hpp"
+#include "storage/utils/noncopyable.hpp"
 
 namespace network {
 
-class Server {
+class Server : utils::NonCopyable {
 public:
   Server(unsigned port) : port_(port) {}
 
@@ -13,7 +14,7 @@ public:
   void Start();
 
 private:
-  void HandleAccept(network::Connection::Ptr client_conn, const asio::error_code& ec);
+  void HandleAccept(Connection::Ptr client_conn, const asio::error_code& ec);
 
   const unsigned port_;
   asio::io_context io_context_;

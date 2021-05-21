@@ -7,9 +7,9 @@
 #include <memory>
 #include <system_error>
 
-namespace network {
+#include "response.pb.h"
 
-static constexpr inline char null_terminator = '\0';
+namespace network {
 
 class Connection : public std::enable_shared_from_this<Connection> {
 public:
@@ -27,7 +27,7 @@ public:
 private:
   Connection(asio::io_context& io_context) : socket_(io_context) {}
 
-  void WriteToSocket(std::string message);
+  void WriteToSocket(Response::StatusCode code, std::optional<std::string> message);
   void ReadFromSocket();
 
   void HandleWrite(const std::error_code& ec, size_t bytes_transffered);

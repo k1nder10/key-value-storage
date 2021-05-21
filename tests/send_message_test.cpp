@@ -2,13 +2,12 @@
 #include <spdlog/spdlog.h>
 
 #include <asio.hpp>
-#include <chrono>
-#include <thread>
 
 #include "storage/network/connection.cpp"
 #include "storage/network/request_facade.hpp"
+#include "storage/network/response_facade.hpp"
+#include "storage/network/types.hpp"
 
-using namespace std::chrono_literals;
 using tcp = asio::ip::tcp;
 
 static constexpr unsigned port = 27901;
@@ -23,34 +22,32 @@ TEST(SendMessage, SetCommand) {
   sock.connect(ep, ec);
   ASSERT_EQ(ec.value(), 0);
 
-  // 1. read greeting
+  // 1. send request
   {
-    asio::streambuf greeting;
-    size_t bytes_accepted = asio::read_until(sock, greeting, null_terminator);
-    EXPECT_EQ(ec.value(), 0);
-    EXPECT_NE(bytes_accepted, 0);
-    EXPECT_STREQ(static_cast<const char*>(greeting.data().data()), "Hello from server!");
-  }
+    RequestFacade req(std::make_shared<Request>());
+    std::string message =
+        req.Serialize(Request::Method::Request_Method_Set, "Hello", "World");
 
-  // 2. send request
-  {
-    Request req;
-    req.set_method(::network::Request_Method::Request_Method_Set);
-    req.set_key("Hello");
-    req.set_value("World");
-    std::string message = req.SerializeAsString() + null_terminator;
     size_t bytes_transferred = asio::write(sock, asio::buffer(message), ec);
-    EXPECT_NE(bytes_transferred, 0);
-    EXPECT_EQ(ec.value(), 0);
+
+    ASSERT_NE(bytes_transferred, 0);
+    ASSERT_EQ(ec.value(), 0);
   }
 
-  // 3. read response
+  // 2. read response
   {
-    asio::streambuf response;
-    size_t bytes_accepted = asio::read_until(sock, response, null_terminator);
-    EXPECT_EQ(ec.value(), 0);
-    EXPECT_NE(bytes_accepted, 0);
-    EXPECT_STREQ(static_cast<const char*>(response.data().data()), "ok");
+    asio::streambuf response_buf;
+    size_t bytes_accepted = asio::read_until(sock, response_buf, null_terminator);
+
+    ResponseFacade resp(std::make_shared<Response>());
+    const bool is_deserialized =
+        resp.Deserialize(response_buf.data().data(), bytes_accepted);
+
+    ASSERT_EQ(is_deserialized, true);
+    ASSERT_EQ(ec.value(), 0);
+    ASSERT_NE(bytes_accepted, 0);
+    ASSERT_EQ(resp.GetStatusCode(), 0);
+    resp.Print();
   }
 
   sock.close();

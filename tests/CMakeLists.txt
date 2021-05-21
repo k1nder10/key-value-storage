@@ -34,5 +34,4 @@ set_target_properties(${test_name} PROPERTIES CXX_STANDARD 17
 endfunction()
 
 add_test(connection_test)
-add_test(read_greeting_test)
 add_test(send_message_test)

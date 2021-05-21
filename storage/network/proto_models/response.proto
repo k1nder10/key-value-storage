@@ -8,4 +8,5 @@ message Response {
   }
 
   StatusCode code = 1;
+  optional string value = 2;
 }
