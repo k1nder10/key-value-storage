@@ -6,6 +6,7 @@
 #include <string>
 
 #include "request.pb.h"
+#include "request_dispatcher.hpp"
 #include "request_facade.hpp"
 #include "response.pb.h"
 #include "response_facade.hpp"
@@ -22,9 +23,9 @@ void Connection::Start() {
 }
 
 void Connection::WriteToSocket(Response::StatusCode code,
-                               std::optional<std::string> message = {}) {
+                               std::optional<Value> value = {}) {
   ResponseFacade resp(std::make_shared<Response>());
-  write_buffer_ = resp.Serialize(code, message);
+  write_buffer_ = resp.Serialize(code, value);
 
   asio::async_write(
       socket_, asio::buffer(write_buffer_),
@@ -61,13 +62,16 @@ void Connection::HandleRead(const asio::error_code& ec, size_t bytes_accepted) {
 
   RequestFacade req(std::make_shared<Request>());
   if (!req.Deserialize(read_buffer_.data().data(), bytes_accepted)) {
-    WriteToSocket(Response::StatusCode::Response_StatusCode_Error);
+    WriteToSocket(Response_StatusCode_Error);
     return;
   }
+  read_buffer_.consume(bytes_accepted);  // clear read buffer
 
   req.Print();
-  read_buffer_.consume(bytes_accepted);  // clear read buffer
-  WriteToSocket(Response::StatusCode::Response_StatusCode_Ok);
+
+  RequestDispatcher dispatcher;
+  const auto [status_code, value] = dispatcher.dispatch(req);
+  WriteToSocket(status_code, value);
 }
 
 void Connection::Stop() {

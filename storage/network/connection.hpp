@@ -5,9 +5,10 @@
 #include <asio/io_context.hpp>
 #include <asio/ip/tcp.hpp>
 #include <memory>
+#include <optional>
 #include <system_error>
 
-#include "response.pb.h"
+#include "types.hpp"
 
 namespace network {
 
@@ -27,7 +28,7 @@ public:
 private:
   Connection(asio::io_context& io_context) : socket_(io_context) {}
 
-  void WriteToSocket(Response::StatusCode code, std::optional<std::string> message);
+  void WriteToSocket(StatusCode code, std::optional<Value> value);
   void ReadFromSocket();
 
   void HandleWrite(const std::error_code& ec, size_t bytes_transffered);

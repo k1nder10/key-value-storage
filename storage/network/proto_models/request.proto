@@ -11,5 +11,5 @@ message Request {
 
   Method method = 1;
   string key = 2;
-  string value = 3;
+  optional string value = 3;
 }

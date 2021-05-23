@@ -19,7 +19,11 @@ add_executable(storage storage/main.cpp
                        storage/network/server.hpp
                        storage/network/server.cpp
                        storage/network/request_facade.hpp
+                       storage/network/request_facade.cpp
                        storage/network/response_facade.hpp
+                       storage/network/response_facade.cpp
+                       storage/network/request_dispatcher.hpp
+                       storage/network/request_dispatcher.cpp
                        storage/network/types.hpp
                        storage/disk/file_reader.hpp
                        storage/disk/file_reader.cpp
@@ -27,6 +31,8 @@ add_executable(storage storage/main.cpp
                        storage/disk/file_writer.cpp
                        storage/btree/btree.hpp
                        storage/btree/btree.cpp
+                       storage/btree/btree_impl.hpp
+                       storage/btree/btree_impl.cpp
                        storage/utils/noncopyable.hpp
                        ${PROTO_HEADERS}
                        ${PROTO_SOURCES})
