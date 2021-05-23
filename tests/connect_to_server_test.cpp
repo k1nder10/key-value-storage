@@ -1,5 +1,3 @@
-#include "storage/network/connection.cpp"
-
 #include <gtest/gtest.h>
 #include <spdlog/spdlog.h>
 
