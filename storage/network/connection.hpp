@@ -8,6 +8,7 @@
 #include <optional>
 #include <system_error>
 
+#include "request_dispatcher.hpp"
 #include "types.hpp"
 
 namespace network {
@@ -20,7 +21,9 @@ public:
     return Ptr(new Connection(io_context));
   }
 
-  asio::ip::tcp::socket& Socket() { return socket_; }
+  asio::ip::tcp::socket& Socket() {
+    return socket_;
+  }
 
   void Start();
   void Stop();
@@ -38,6 +41,7 @@ private:
   bool is_started_{false};
   asio::streambuf read_buffer_;
   std::string write_buffer_;
+  RequestDispatcher request_dispatcher_;
 };
 
 }  // namespace network

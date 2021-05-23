@@ -6,7 +6,6 @@
 #include <string>
 
 #include "request.pb.h"
-#include "request_dispatcher.hpp"
 #include "request_facade.hpp"
 #include "response.pb.h"
 #include "response_facade.hpp"
@@ -68,9 +67,8 @@ void Connection::HandleRead(const asio::error_code& ec, size_t bytes_accepted) {
   read_buffer_.consume(bytes_accepted);  // clear read buffer
 
   req.Print();
-
-  RequestDispatcher dispatcher;
-  const auto [status_code, value] = dispatcher.dispatch(req);
+  
+  const auto [status_code, value] = request_dispatcher_.dispatch(req);
   WriteToSocket(status_code, value);
 }
 
