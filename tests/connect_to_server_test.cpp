@@ -59,7 +59,7 @@ TEST(ConnectionTest, StartMultipleAsyncConnections) {
   }
 
   for (auto& sock : sockets) {
-    sock.sock->connect(ep, sock.ec);
+    sock.sock->connect(ep, sock.ec); // TODO: change to async connect
   }
   io_context.run();
 

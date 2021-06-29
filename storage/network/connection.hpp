@@ -1,9 +1,6 @@
 #pragma once
 #include <array>
 #include <asio.hpp>
-#include <asio/buffer.hpp>
-#include <asio/io_context.hpp>
-#include <asio/ip/tcp.hpp>
 #include <memory>
 #include <optional>
 #include <system_error>
@@ -31,7 +28,7 @@ public:
 private:
   Connection(asio::io_context& io_context) : socket_(io_context) {}
 
-  void WriteToSocket(StatusCode code, std::optional<Value> value);
+  void WriteToSocket(StatusCode code, std::optional<Value> value = {});
   void ReadFromSocket();
 
   void HandleWrite(const std::error_code& ec, size_t bytes_transffered);

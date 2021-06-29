@@ -22,7 +22,7 @@ void Connection::Start() {
 }
 
 void Connection::WriteToSocket(Response::StatusCode code,
-                               std::optional<Value> value = {}) {
+                               std::optional<Value> value) {
   ResponseFacade resp(std::make_shared<Response>());
   write_buffer_ = resp.Serialize(code, value);
 
@@ -68,7 +68,7 @@ void Connection::HandleRead(const asio::error_code& ec, size_t bytes_accepted) {
 
   req.Print();
   
-  const auto [status_code, value] = request_dispatcher_.dispatch(req);
+  const auto& [status_code, value] = request_dispatcher_.dispatch(req);
   WriteToSocket(status_code, value);
 }
 
