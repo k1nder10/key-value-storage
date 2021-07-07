@@ -5,9 +5,9 @@
 #include <optional>
 
 #include "response.pb.h"
-#include "types.hpp"
+#include "storage/types.hpp"
 
-using namespace network;
+namespace network {
 
 ResponseFacade::ResponseFacade(std::shared_ptr<Response> resp) : resp_(resp) {}
 
@@ -48,3 +48,5 @@ std::string ResponseFacade::StatusCodeToString(StatusCode code) {
   else
     return "Unknown";
 }
+
+}  // namespace network

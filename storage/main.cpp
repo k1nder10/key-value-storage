@@ -1,14 +1,23 @@
 #include <spdlog/spdlog.h>
+
 #include <asio/io_context.hpp>
 #include <exception>
+#include <memory>
 #include <system_error>
 
+#include "storage/core/btree_storage.hpp"
+#include "storage/core/storage.hpp"
+#include "storage/network/request_dispatcher.hpp"
 #include "storage/network/server.hpp"
 
 int main() {
   try {
+    core::BtreeStorage btree_storage;
+    core::Storage storage(btree_storage);
+
     constexpr unsigned port = 27901;
-    network::Server server(port);
+    network::RequestDispatcher dispatcher(storage);
+    network::Server server(port, dispatcher);
     server.Start();
   }
   catch (const asio::system_error& e) {

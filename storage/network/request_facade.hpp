@@ -2,9 +2,10 @@
 #include <spdlog/spdlog.h>
 
 #include <memory>
+#include <optional>
 
 #include "request.pb.h"
-#include "types.hpp"
+#include "storage/types.hpp"
 
 namespace network {
 

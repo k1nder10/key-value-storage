@@ -1,6 +1,6 @@
 #include "request_facade.hpp"
 
-using namespace network;
+namespace network {
 
 RequestFacade::RequestFacade(std::shared_ptr<Request> req) : req_(req) {}
 
@@ -52,3 +52,5 @@ std::string RequestFacade::RequestMethodToString(RequestMethod method) {
   else
     return "Unknown";
 }
+
+}  // namespace network

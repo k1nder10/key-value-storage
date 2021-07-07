@@ -8,12 +8,14 @@ conan_basic_setup(TARGETS)
 
 # Manage storage compilation
 find_package(Protobuf REQUIRED)
-protobuf_generate_cpp(PROTO_SOURCES 
-                      PROTO_HEADERS 
+protobuf_generate_cpp(PROTO_SOURCES
+                      PROTO_HEADERS
                       ${CMAKE_SOURCE_DIR}/storage/network/proto_models/request.proto
                       ${CMAKE_SOURCE_DIR}/storage/network/proto_models/response.proto)
 
 add_executable(storage storage/main.cpp
+                       storage/types.hpp
+                       storage/result.hpp
                        storage/network/connection.hpp
                        storage/network/connection.cpp
                        storage/network/server.hpp
@@ -23,23 +25,20 @@ add_executable(storage storage/main.cpp
                        storage/network/response_facade.hpp
                        storage/network/response_facade.cpp
                        storage/network/request_dispatcher.hpp
-                       storage/network/request_dispatcher.cpp
-                       storage/network/types.hpp
                        storage/disk/file_reader.hpp
                        storage/disk/file_reader.cpp
                        storage/disk/file_writer.hpp
                        storage/disk/file_writer.cpp
-                       storage/btree/btree.hpp
-                       storage/btree/btree.cpp
-                       storage/btree/btree_impl.hpp
-                       storage/btree/btree_impl.cpp
+                       storage/core/storage.hpp
+                       storage/core/btree_storage.hpp
+                       storage/core/btree_storage.cpp
                        storage/utils/noncopyable.hpp
                        ${PROTO_HEADERS}
                        ${PROTO_SOURCES})
 
-target_link_libraries(storage CONAN_PKG::asio 
-                              CONAN_PKG::spdlog
-                              CONAN_PKG::protobuf)
+target_link_libraries(storage PUBLIC CONAN_PKG::asio
+                                     CONAN_PKG::spdlog
+                                     CONAN_PKG::protobuf)
 target_include_directories(storage PUBLIC ${CONAN_INCLUDE_DIRS_ASIO}
                                           ${CONAN_INCLUDE_DIRS_SPDLOG}
                                           ${CMAKE_SOURCE_DIR}

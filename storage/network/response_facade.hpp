@@ -5,14 +5,14 @@
 #include <string>
 
 #include "response.pb.h"
-#include "types.hpp"
+#include "storage/types.hpp"
 
 namespace network {
 
 class ResponseFacade {
 public:
   ResponseFacade(std::shared_ptr<Response> resp);
-  
+
   std::string Serialize(StatusCode code, std::optional<Value> value = {});
   bool Deserialize(const void* buf, size_t size);
 
